@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafePass Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0e1621; /* Dark theme */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: #17212b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        h2 { color: #52a8ff; }
+
+        .display {
+            background: #242f3d;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            word-break: break-all; /* Ensures long passwords don't break the layout */
+            border: 1px solid #3b4b5b;
+            min-height: 30px;
+        }
+
+        .settings {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label { display: block; margin: 10px 0; font-size: 14px; }
+
+        input[type="range"] { width: 100%; cursor: pointer; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #52a8ff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover { background: #3b91e6; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>SafePass</h2>
+    <div class="display" id="passwordResult">Click Generate</div>
+    
+    <div class="settings">
+        <label>Length: <span id="lengthVal">12</span></label>
+        <input type="range" id="lengthSlider" min="8" max="30" value="12" oninput="updateLabel()">
+        
+        <label><input type="checkbox" id="includeNumbers" checked> Include Numbers</label>
+        <label><input type="checkbox" id="includeSymbols" checked> Include Symbols</label>
+    </div>
+
+    <button onclick="generatePassword()">Generate Password</button>
+</div>
+
+<script>
+    // This updates the number on the screen when you slide the bar
+    function updateLabel() {
+        document.getElementById('lengthVal').innerText = document.getElementById('lengthSlider').value;
+    }
+
+    function generatePassword() {
+        // 1. The "Buckets" of characters
+        const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const numbers = "0123456789";
+        const symbols = "!@#$%^&*()_+[]{}|;:,.<>?";
+
+        // 2. Start with just letters
+        let characters = letters;
+        
+        // 3. Add numbers or symbols if the checkboxes are checked
+        if (document.getElementById('includeNumbers').checked) {
+            characters += numbers;
+        }
+        if (document.getElementById('includeSymbols').checked) {
+            characters += symbols;
+        }
+
+        // 4. The Logic Loop
+        let password = "";
+        const length = document.getElementById('lengthSlider').value;
+
+        for (let i = 0; i < length; i++) {
+            // Pick one random character from our "characters" string
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            password += characters[randomIndex];
+        }
+
+        // 5. Show it on the screen
+        document.getElementById('passwordResult').innerText = password;
+    }
+</script>
+
+</body>
+</html>
