@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Grade Calculator</title>
+    <style>
+        /* CSS - Making it look modern */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 25px;
+        }
+
+        .subject-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input[type="text"] { flex: 2; } /* Subject name takes more space */
+        input[type="number"] { flex: 1; } /* Marks take less space */
+
+        input:focus { border-color: #1a73e8; }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .add-btn { background: #e8f0fe; color: #1a73e8; }
+        .add-btn:hover { background: #d2e3fc; }
+
+        .calc-btn { background: #1a73e8; color: white; font-size: 16px; }
+        .calc-btn:hover { background: #1557b0; }
+
+        #result-area {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: none; /* Hidden until calculated */
+            text-align: center;
+        }
+
+        .grade-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Grade Calculator</h2>
+    
+    <div id="subjects-container">
+        <!-- Initial Subject Rows -->
+        <div class="subject-row">
+            <input type="text" placeholder="Subject Name" class="sub-name">
+            <input type="number" placeholder="Marks" class="sub-marks" min="0" max="100">
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button class="add-btn" onclick="addSubject()">+ Add Another Subject</button>
+        <button class="calc-btn" onclick="calculateResults()">Calculate Final Grade</button>
+    </div>
+
+    <div id="result-area">
+        <p>Total Marks: <span id="res-total">0</span></p>
+        <p>Average: <span id="res-avg">0</span>%</p>
+        <p class="grade-text">Grade: <span id="res-grade">-</span></p>
+    </div>
+</div>
+
+<script>
+    // JavaScript - Logic and Math
+    function addSubject() {
+        const container = document.getElementById('subjects-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'subject-row';
+        newRow.innerHTML = `
+            <input type="text" placeholder="Subject Name" class="sub-name">
+            <input type="number" placeholder="Marks" class="sub-marks" min="0" max="100">
+        `;
+        container.appendChild(newRow);
+    }
+
+    function calculateResults() {
+        const marksElements = document.getElementsByClassName('sub-marks');
+        let total = 0;
+        let count = 0;
+
+        for (let i = 0; i < marksElements.length; i++) {
+            let val = parseFloat(marksElements[i].value);
+            if (!isNaN(val)) {
+                total += val;
+                count++;
+            }
+        }
+
+        if (count === 0) {
+            alert("Please enter marks for at least one subject.");
+            return;
+        }
+
+        const average = total / count;
+        let grade = "";
+
+        // Grading Logic
+        if (average >= 90) grade = "A+ (Excellent)";
+        else if (average >= 80) grade = "A (Very Good)";
+        else if (average >= 70) grade = "B (Good)";
+        else if (average >= 60) grade = "C (Satisfactory)";
+        else if (average >= 50) grade = "D (Pass)";
+        else grade = "F (Fail)";
+
+        // Displaying results
+        document.getElementById('res-total').innerText = total;
+        document.getElementById('res-avg').innerText = average.toFixed(2);
+        document.getElementById('res-grade').innerText = grade;
+        document.getElementById('result-area').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
